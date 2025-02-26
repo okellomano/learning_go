@@ -17,7 +17,7 @@ func main() {
 	var email string
 	var userTickets uint
 
-	var bookings [50]string
+	bookings := []string{}
 
 	// get the user input
 	fmt.Println("Enter your first name:")
@@ -38,6 +38,6 @@ func main() {
 
 	fmt.Printf("%v remaining tickets for %v \n", remainingTickets, conferenceName)
 
-	bookings[0] = firstName + " " + lastName
+	bookings = append(bookings, firstName+" "+lastName)
 	fmt.Printf("Bookings: %v\n", bookings)
 }
