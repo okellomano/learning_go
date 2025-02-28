@@ -3,14 +3,14 @@ package main
 import (
 	"booking-app/shared"
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 const conferenceTickets = 50
 
 var conferenceName = "Go"
 var remainingTickets uint = 50
-var bookings = []string{}
+var bookings = make([]map[string]string, 0) //initializing a list of maps
 
 func main() {
 
@@ -56,8 +56,7 @@ func greetUsers() {
 func getFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 	}
 	return firstNames
 }
@@ -86,7 +85,14 @@ func getUserInput() (string, string, string, uint) {
 
 func bookTickets(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	var userData = make(map[string]string) // creates an empty map
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["tickets"] = strconv.FormatUint(uint64(userTickets), 10) //converting unit to string as a decimal number
+
+	bookings = append(bookings, userData)
 
 	fmt.Printf("Thank you %v for booking %v tickets. You will receive a confirmation email at %v. \n", firstName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
