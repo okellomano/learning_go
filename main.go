@@ -33,7 +33,7 @@ func main() {
 		if isValidName && isValidEmail && isValidUserTickets {
 
 			bookTickets(userTickets, firstName, lastName, email)
-			sendTicket(userTickets, firstName, lastName, email)
+			go sendTicket(userTickets, firstName, lastName, email)
 
 			// print first names
 			firstNames := getFirstNames()
