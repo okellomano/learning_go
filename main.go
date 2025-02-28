@@ -3,14 +3,24 @@ package main
 import (
 	"booking-app/shared"
 	"fmt"
-	"strconv"
+	"time"
 )
 
 const conferenceTickets = 50
 
 var conferenceName = "Go"
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0) //initializing a list of maps
+
+// initializing a list of maps (for same data types)
+var bookings = make([]UserData, 0)
+
+// use struct to save different data types
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 func main() {
 
@@ -23,6 +33,7 @@ func main() {
 		if isValidName && isValidEmail && isValidUserTickets {
 
 			bookTickets(userTickets, firstName, lastName, email)
+			sendTicket(userTickets, firstName, lastName, email)
 
 			// print first names
 			firstNames := getFirstNames()
@@ -56,7 +67,7 @@ func greetUsers() {
 func getFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -86,15 +97,26 @@ func getUserInput() (string, string, string, uint) {
 func bookTickets(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 
-	var userData = make(map[string]string) // creates an empty map
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["tickets"] = strconv.FormatUint(uint64(userTickets), 10) //converting unit to string as a decimal number
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
 
 	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings: %v\n", bookings)
 
 	fmt.Printf("Thank you %v for booking %v tickets. You will receive a confirmation email at %v. \n", firstName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	// Once a user books a ticket, send it to them via email
+	time.Sleep(10 * time.Second)
+	ticket := fmt.Sprintf("%v tickets for %v %v\n", userTickets, firstName, lastName)
+	fmt.Println("#########################################################")
+	fmt.Printf("Senging ticket:\n %v \nto email address %v\n", ticket, email)
+	fmt.Println("#########################################################")
 }
